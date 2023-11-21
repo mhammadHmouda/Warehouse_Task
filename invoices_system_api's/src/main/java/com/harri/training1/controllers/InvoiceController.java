@@ -27,8 +27,8 @@ public class InvoiceController {
      */
     @PostMapping
     @PreAuthorize("hasAnyAuthority('SUPERUSER', 'USER')")
-    public ResponseEntity<?> addInvoice(@RequestBody List<InvoiceDto> invoice) {
-        invoiceService.addInvoice(invoice);
+    public ResponseEntity<?> addInvoice(@RequestBody InvoiceDto invoiceDto) {
+        invoiceService.addInvoice(invoiceDto);
         LOGGER.info("Add new invoice.");
         return ResponseEntity.ok("Invoice added successfully!");
     }

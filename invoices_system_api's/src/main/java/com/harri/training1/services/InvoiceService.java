@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,35 +20,25 @@ public class InvoiceService {
     private final AutoMapper<Invoice, InvoiceDto> mapper;
 
 
-    public void addInvoice(List<InvoiceDto> invoices) {
+    public void addInvoice(InvoiceDto invoiceDto) {
         try {
-            List<Invoice> invoiceList = new ArrayList<>();
-            invoices.forEach(invoiceDto -> {
-                Invoice invoice = mapper.toModel(invoiceDto, Invoice.class);
-                invoiceList.add(invoice);
-            });
-            invoiceRepository.save(invoiceList);
+            Invoice invoice = mapper.toModel(invoiceDto, Invoice.class);
+            invoiceRepository.save(invoice);
         } catch (Exception e) {
             LOGGER.error("Something went wrong when add new invoice: " + e.getMessage());
             throw new InvoiceNotAddedException(e.getMessage());
         }
     }
 
-    public List<InvoiceDto> findById(Long id) {
-        List<Invoice> invoices = invoiceRepository.findById(id);
+    public InvoiceDto findById(Long id) {
+        Invoice invoice = invoiceRepository.findById(id);
 
-        if (invoices.isEmpty()) {
+        if (invoice == null) {
             LOGGER.error("No any invoice with id = " + id);
             throw new InvoiceNotExistException("No invoice exists for this id: " + id);
         }
 
-        List<InvoiceDto> invoiceList = new ArrayList<>();
-        invoices.forEach(invoice -> {
-            InvoiceDto invoiceDto = mapper.toDto(invoice, InvoiceDto.class);
-            invoiceList.add(invoiceDto);
-        });
-
-        return invoiceList;
+        return mapper.toDto(invoice, InvoiceDto.class);
     }
 
     public List<InvoiceDto> findAll() {

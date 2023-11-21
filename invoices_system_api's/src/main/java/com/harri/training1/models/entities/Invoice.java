@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +14,7 @@ public class Invoice {
     private Long id;
     private String createdAt = LocalDate.now().toString();
     private float amount;
-    private Item item;
+    private List<Item> items;
     private File file;
     private Long userId;
 }
